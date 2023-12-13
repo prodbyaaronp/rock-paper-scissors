@@ -1,78 +1,66 @@
 let computerScore = 0
 let playerScore = 0
+const buttons = document.querySelectorAll("input")
 
 function getComputerChoice() {
     let choices = ["rock", "paper", "scissors"];
     return choices[Math.floor((Math.random() * choices.length))];
 };
 
-let computerSelection = getComputerChoice()
-let playerSelection = prompt("rock, paper, scissors... shoot!").toLowerCase()
-let roundWinner = ""
+function gameOver() {
+    buttons.forEach(elem => {
+        elem.disabled = true
+    }) 
+}
 
-// plays a round of the game
+function playRound(playerSelection) {
 
-let playRound = (playerSelection, computerSelection) => {
+    let computerSelection = getComputerChoice()
 
+    const result = document.querySelector("#result")
+    result.textContent = ""
 
     if ((playerSelection == "rock" && computerSelection == "scissors") ||
     (playerSelection == "paper" && computerSelection == "rock") ||
     (playerSelection == "scissors" && computerSelection == "paper")) {
     
-        playerScore++
-        roundWinner = alert("You Win! " + playerSelection + " beats " + computerSelection)
+        playerScore += 1
+        result.textContent = ("You Win! " + playerSelection + " beats " + computerSelection + 
+        "<br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+
+        if (playerScore == 5) {
+            result.textContent += "Congratulations! You won the game! Refresh the page to play again"
+            gameOver()
+        }
     }
 
     else if ((playerSelection == "paper" && computerSelection == "scissors") ||
         (playerSelection == "rock" && computerSelection == "paper") ||
         (playerSelection == "scissors" && computerSelection == "rock")) {
         
-        computerScore++
-        roundWinner = alert("You lose " + computerSelection + " beats " + playerSelection)
+        computerScore += 1
+        result.textContent = ("You lose " + computerSelection + " beats " + playerSelection + 
+        "<br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
 
+        if (computerScore == 5) {
+            result.textContent += "Sorry, you lost the game! Refresh the page to play again."
+            gameOver()
+        }
     }
    
     else if (playerSelection == computerSelection) {
-        roundWinner = ("You tied! You both selected " + playerSelection + " try again");
+        result.textContent = ("You tied! You both selected " + playerSelection + " try again")
     }
     
     else {
-        alert("You must choose rock, paper or scissors");
+        result.textContent += "You must choose rock, paper or scissors"
     }
 
-    return playRound();
-
+    return
 };
 
-// console.log(playRound(playerSelection, computerSelection));
-
-// game function
-
-function game() {
-   
-    playRound()
-    playRound()
-    playRound()
-    playRound()
-    playRound()
-
-
-        if (playerScore === 5) {
-            alert ("You win!")
-    
-            gameOver()
-        }
-    
-        if (computerScore === 5) {
-            alert ("You Lose!")
-    
-            gameOver()
-        }
-
-}
-
-function gameOver() {
-    return playerScore === 5 || computerScore === 5
-}
-
-
+buttons.forEach(button => {
+    button.addEventListener("click", function(){
+        playRound(button.value)
+    })
+})
